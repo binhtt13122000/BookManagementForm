@@ -67,7 +67,7 @@ namespace BookManagementForm
             foreach(Book book in books)
             {
                 string line = "";
-                line += (book.Id + "-" + book.Name + "-" + book.Author + "-" + book.NumOfReprints + "-" + book.Price + "-" + book.Quantity + "-" + (book.IsNativeBook ? "1" : "0" + "-") + book.PublishDate);
+                line += (book.Id + "-" + book.Name + "-" + book.Author + "-" + book.NumOfReprints + "-" + book.Price + "-" + book.Quantity + "-" + ((book.IsNativeBook ? "1" : "0") + "-") + book.PublishDate);
                 sw.WriteLine(line);
             }
             sw.Close();
@@ -93,14 +93,31 @@ namespace BookManagementForm
             books.AddRange(booksFromFile);
         }
 
-        public List<Book> SearchByNameAndRangeOfDate(string name, DateTime start, DateTime end)
+        public List<Book> SearchByNameAndRangeOfDate(string name, int choice)
         {
             List<Book> searchBooks = new List<Book>();
             foreach(Book b in books)
             {
-                if (b.Name.Contains(name) && b.PublishDate.CompareTo(start) >= 0 && b.PublishDate.CompareTo(end) <= 0)
+                if (b.Name.ToLower().Contains(name.ToLower()))
                 {
-                    searchBooks.Add(b);
+                    if(choice == 0)
+                    {
+                        searchBooks.Add(b);
+                    }
+                    if(choice == 1)
+                    {
+                        if (b.IsNativeBook)
+                        {
+                            searchBooks.Add(b);
+                        }
+                    }
+                    if(choice == 2)
+                    {
+                        if (!b.IsNativeBook)
+                        {
+                            searchBooks.Add(b);
+                        }
+                    }
                 }
             }
 

@@ -56,9 +56,10 @@ namespace BookManagementForm
             this.nameLabel = new System.Windows.Forms.Label();
             this.IdLabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.bookTypeCbx = new System.Windows.Forms.ComboBox();
             this.searchBtn = new System.Windows.Forms.Button();
             this.searchTxt = new System.Windows.Forms.TextBox();
-            this.timeLabel = new System.Windows.Forms.Label();
+            this.searchBookTypeLabel = new System.Windows.Forms.Label();
             this.nameSearchLabel = new System.Windows.Forms.Label();
             this.tableBook = new System.Windows.Forms.DataGridView();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -70,8 +71,6 @@ namespace BookManagementForm
             this.RePublish = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PublishDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.startTxt = new System.Windows.Forms.DateTimePicker();
-            this.endTxt = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -354,17 +353,28 @@ namespace BookManagementForm
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.endTxt);
-            this.panel2.Controls.Add(this.startTxt);
+            this.panel2.Controls.Add(this.bookTypeCbx);
             this.panel2.Controls.Add(this.searchBtn);
             this.panel2.Controls.Add(this.searchTxt);
-            this.panel2.Controls.Add(this.timeLabel);
+            this.panel2.Controls.Add(this.searchBookTypeLabel);
             this.panel2.Controls.Add(this.nameSearchLabel);
             this.panel2.Location = new System.Drawing.Point(64, 389);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(666, 224);
             this.panel2.TabIndex = 1;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // bookTypeCbx
+            // 
+            this.bookTypeCbx.FormattingEnabled = true;
+            this.bookTypeCbx.Items.AddRange(new object[] {
+            "All",
+            "Native Book",
+            "Translate Book"});
+            this.bookTypeCbx.Location = new System.Drawing.Point(194, 106);
+            this.bookTypeCbx.Name = "bookTypeCbx";
+            this.bookTypeCbx.Size = new System.Drawing.Size(166, 28);
+            this.bookTypeCbx.TabIndex = 24;
             // 
             // searchBtn
             // 
@@ -383,14 +393,15 @@ namespace BookManagementForm
             this.searchTxt.Size = new System.Drawing.Size(170, 27);
             this.searchTxt.TabIndex = 22;
             // 
-            // timeLabel
+            // searchBookTypeLabel
             // 
-            this.timeLabel.AutoSize = true;
-            this.timeLabel.Location = new System.Drawing.Point(44, 109);
-            this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(110, 20);
-            this.timeLabel.TabIndex = 23;
-            this.timeLabel.Text = "Search by Time";
+            this.searchBookTypeLabel.AutoSize = true;
+            this.searchBookTypeLabel.Location = new System.Drawing.Point(44, 109);
+            this.searchBookTypeLabel.Name = "searchBookTypeLabel";
+            this.searchBookTypeLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.searchBookTypeLabel.Size = new System.Drawing.Size(146, 20);
+            this.searchBookTypeLabel.TabIndex = 23;
+            this.searchBookTypeLabel.Text = "Search By Book Type";
             // 
             // nameSearchLabel
             // 
@@ -483,22 +494,6 @@ namespace BookManagementForm
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // startTxt
-            // 
-            this.startTxt.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.startTxt.Location = new System.Drawing.Point(232, 104);
-            this.startTxt.Name = "startTxt";
-            this.startTxt.Size = new System.Drawing.Size(132, 27);
-            this.startTxt.TabIndex = 22;
-            // 
-            // endTxt
-            // 
-            this.endTxt.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.endTxt.Location = new System.Drawing.Point(232, 172);
-            this.endTxt.Name = "endTxt";
-            this.endTxt.Size = new System.Drawing.Size(132, 27);
-            this.endTxt.TabIndex = 24;
-            // 
             // BookForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -567,11 +562,10 @@ namespace BookManagementForm
         private System.Windows.Forms.Label nameSearchLabel;
         private System.Windows.Forms.Button searchBtn;
         private System.Windows.Forms.TextBox searchTxt;
-        private System.Windows.Forms.Label timeLabel;
+        private System.Windows.Forms.Label searchBookTypeLabel;
         private System.Windows.Forms.TextBox sear;
         private System.Windows.Forms.TextBox ch;
-        private System.Windows.Forms.DateTimePicker endTxt;
-        private System.Windows.Forms.DateTimePicker startTxt;
+        private System.Windows.Forms.ComboBox bookTypeCbx;
     }
 }
 

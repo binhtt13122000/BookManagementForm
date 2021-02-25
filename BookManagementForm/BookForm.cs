@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BookManagementForm
@@ -20,14 +13,13 @@ namespace BookManagementForm
             removeBtn.Enabled = false;
             updateBtn.Enabled = false;
             exportBtn.Enabled = false;
-            startTxt.Value = startTxt.MinDate;
-            endTxt.Value = endTxt.MaxDate;
+            bookTypeCbx.SelectedIndex = 0;
         }
 
-        public void showSearch(string name, DateTime start, DateTime end)
+        public void showSearch(string name, int choice)
         {
             SearchForm sf = new SearchForm();
-            sf.LoadSearchTable(bookManagement.SearchByNameAndRangeOfDate(name, start, end));
+            sf.LoadSearchTable(bookManagement.SearchByNameAndRangeOfDate(name, choice));
             sf.ShowDialog();
         }
 
@@ -128,7 +120,7 @@ namespace BookManagementForm
             decimal rePublisher = republisherTxt.Value;
 
             bool bError = false;
-            if(Validation.isEmpty(id))
+            if (Validation.isEmpty(id))
             {
                 errorProvider1.SetError(IdTxt, "ID is not null!");
                 bError = true;
@@ -142,7 +134,7 @@ namespace BookManagementForm
                     bError = true;
                 }
             }
-            
+
 
             if (Validation.isEmpty(name))
             {
@@ -156,7 +148,7 @@ namespace BookManagementForm
                 bError = true;
             }
 
-            if(!Validation.isDouble(price, 0.1, double.MaxValue))
+            if (!Validation.isDouble(price, 0.1, double.MaxValue))
             {
                 errorProvider1.SetError(priceTxt, "Price is a double!");
                 bError = true;
@@ -168,13 +160,13 @@ namespace BookManagementForm
                 bError = true;
             }
 
-            if(!isNativeBookRadio.Checked && !isTranslateBookRadio.Checked)
+            if (!isNativeBookRadio.Checked && !isTranslateBookRadio.Checked)
             {
                 errorProvider1.SetError(isTranslateBookRadio, "Please choose one!");
                 bError = true;
             }
 
-            if(!Validation.isInteger(quantity.ToString(), 1, 100))
+            if (!Validation.isInteger(quantity.ToString(), 1, 100))
             {
                 errorProvider1.SetError(quantityTxt, quantity.ToString() + "Quantity is from 1 to 100!");
                 bError = true;
@@ -189,7 +181,8 @@ namespace BookManagementForm
             if (bError)
             {
                 return false;
-            } else
+            }
+            else
             {
                 errorProvider1.Clear();
                 return true;
@@ -216,7 +209,8 @@ namespace BookManagementForm
             if (!validateInput(false))
             {
                 return;
-            } else 
+            }
+            else
             {
                 addBook();
                 clearInput();
@@ -228,7 +222,7 @@ namespace BookManagementForm
             var confirmResult = MessageBox.Show("Are you sure to delete this book ??",
                                      "Confirm Delete!!",
                                      MessageBoxButtons.YesNo);
-            if(confirmResult == DialogResult.Yes)
+            if (confirmResult == DialogResult.Yes)
             {
                 string id = IdTxt.Text.Trim();
                 bool check = bookManagement.RemoveBook(id);
@@ -236,7 +230,8 @@ namespace BookManagementForm
                 {
                     loadTable();
                     clearInput();
-                } else
+                }
+                else
                 {
                     return;
                 }
@@ -246,33 +241,42 @@ namespace BookManagementForm
 
         private void tableBook_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-                tableBook.CurrentRow.Selected = true;
-                string id = tableBook.Rows[e.RowIndex].Cells["ID"].FormattedValue.ToString();
-                Book selectedBook = bookManagement.GetBookById(id);
-                if(selectedBook != null)
+            if (tableBook.CurrentRow == null)
+            {
+                return;
+            }
+            tableBook.CurrentRow.Selected = true;
+            if(e.RowIndex < 0)
+            {
+                return;
+            }
+            string id = tableBook.Rows[e.RowIndex].Cells["ID"].FormattedValue.ToString();
+            Book selectedBook = bookManagement.GetBookById(id);
+            if (selectedBook != null)
+            {
+                IdTxt.Text = selectedBook.Id;
+                nameTxt.Text = selectedBook.Name;
+                authorTxt.Text = selectedBook.Author;
+                priceTxt.Text = selectedBook.Price.ToString();
+                quantityTxt.Value = selectedBook.Quantity;
+                republisherTxt.Value = selectedBook.NumOfReprints;
+                publishDateTxt.Value = selectedBook.PublishDate;
+                bool isNative = selectedBook.IsNativeBook;
+                if (isNative)
                 {
-                    IdTxt.Text = selectedBook.Id;
-                    nameTxt.Text = selectedBook.Name;
-                    authorTxt.Text = selectedBook.Author;
-                    priceTxt.Text = selectedBook.Price.ToString();
-                    quantityTxt.Value = selectedBook.Quantity;
-                    republisherTxt.Value = selectedBook.NumOfReprints;
-                    publishDateTxt.Value = selectedBook.PublishDate;
-                    bool isNative = selectedBook.IsNativeBook;
-                    if (isNative)
-                    {
-                        isNativeBookRadio.Checked = true;
-                        isTranslateBookRadio.Checked = false;
-                    } else
-                    {
-                        isNativeBookRadio.Checked = false;
-                        isTranslateBookRadio.Checked = true;
-                    }
-                    IdTxt.Enabled = false;
-                    removeBtn.Enabled = true;
-                    AddBtn.Enabled = false;
-                    updateBtn.Enabled = true;
+                    isNativeBookRadio.Checked = true;
+                    isTranslateBookRadio.Checked = false;
                 }
+                else
+                {
+                    isNativeBookRadio.Checked = false;
+                    isTranslateBookRadio.Checked = true;
+                }
+                IdTxt.Enabled = false;
+                removeBtn.Enabled = true;
+                AddBtn.Enabled = false;
+                updateBtn.Enabled = true;
+            }
         }
 
         private void newBtn_Click(object sender, EventArgs e)
@@ -308,7 +312,8 @@ namespace BookManagementForm
             if (rs == DialogResult.OK)
             {
                 bookManagement.ExportData(saveFileDialog.FileName);
-            } else
+            }
+            else
             {
                 return;
             }
@@ -319,12 +324,13 @@ namespace BookManagementForm
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Data files|*.dat|Text files|*.txt|Both files|*.dat;*.txt|All files|*.*";
             DialogResult rs = openFileDialog.ShowDialog();
-            if(rs == DialogResult.OK)
+            if (rs == DialogResult.OK)
             {
-                if(bookManagement.GetListBook().Count == 0)
+                if (bookManagement.GetListBook().Count == 0)
                 {
                     bookManagement.ImportData(openFileDialog.FileName, true);
-                } else
+                }
+                else
                 {
                     var confirmResult = MessageBox.Show("Do you want to rewrite ??",
                                     "RewriteConfirm!",
@@ -333,13 +339,14 @@ namespace BookManagementForm
                     {
                         bookManagement.ImportData(openFileDialog.FileName, true);
                     }
-                    if(confirmResult == DialogResult.No)
+                    if (confirmResult == DialogResult.No)
                     {
                         bookManagement.ImportData(openFileDialog.FileName, false);
                     }
                 }
                 loadTable();
-            } else
+            }
+            else
             {
                 return;
             }
@@ -357,7 +364,16 @@ namespace BookManagementForm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            showSearch(searchTxt.Text.Trim(), startTxt.Value, endTxt.Value);
+            int choice = 0;
+            if(bookTypeCbx.SelectedItem.ToString().ToLower().Equals("native book"))
+            {
+                choice = 1;
+            }
+            if (bookTypeCbx.SelectedItem.ToString().ToLower().Equals("translate book"))
+            {
+                choice = 2;
+            }
+            showSearch(searchTxt.Text.Trim(), choice);
         }
     }
 }
